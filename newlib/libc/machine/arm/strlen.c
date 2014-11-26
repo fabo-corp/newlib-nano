@@ -69,7 +69,7 @@ strlen (const char* str)
        "data .req r3\n\t"
        "addr .req r1\n\t"
 
-       "optpld r0\n\t"
+       OPTPLD0(r0)
        /* Word-align address */
        "bic	addr, r0, #3\n\t"
        /* Get adjustment for start ... */
@@ -125,7 +125,7 @@ strlen (const char* str)
        /* and 4 more bytes  */
        "addeq	len, len, #4\n\t"
 	/* If we have PLD, then unroll the loop a bit.  */
-       "optpld addr, #8\n\t"
+       OPTPLD(addr, #8)
        /*  test (data - 0x01010101)  */
        "ittt	eq\n\t"
        "subeq	r2, data, ip\n\t"
@@ -177,7 +177,7 @@ strlen (const char* str)
        "addne	len, len, #1\n\t"
 # endif
 #endif
-       "RETURN");
+       RETURN());
 }
 #endif
 #endif

@@ -44,7 +44,7 @@ strcpy (char* dst, const char* src)
   asm (
 #if !(defined(__OPTIMIZE_SIZE__) || defined (PREFER_SIZE_OVER_SPEED) || \
       (defined (__thumb__) && !defined (__thumb2__)))
-       "optpld	r1\n\t"
+       OPTPLD0(r1)
        "eor	r2, r0, r1\n\t"
        "mov	ip, r0\n\t"
        "tst	r2, #3\n\t"
@@ -75,7 +75,7 @@ strcpy (char* dst, const char* src)
 	  load stalls.  */
        ".p2align 2\n"
   "2:\n\t"
-       "optpld	r1, #8\n\t"
+       OPTPLD(r1, #8)
        "ldr	r4, [r1], #4\n\t"
        "sub	r2, r3, "magic1(r5)"\n\t"
        "bics	r2, r2, r3\n\t"
@@ -104,7 +104,7 @@ strcpy (char* dst, const char* src)
 #ifndef __thumb2__
        "ldr	r5, [sp], #4\n\t"
 #endif
-       "RETURN\n"
+       RETURN()
 
        /* Strings have the same offset from word alignment, but it's
 	  not zero.  */
@@ -115,7 +115,7 @@ strcpy (char* dst, const char* src)
        "strb	r2, [ip], #1\n\t"
        "cmp	r2, #0\n\t"
        "it	eq\n"
-       "RETURN	eq\n"
+       RETURN(eq)
   "1:\n\t"
        "tst	r1, #2\n\t"
        "beq	5b\n\t"
@@ -135,7 +135,7 @@ strcpy (char* dst, const char* src)
        "tstne	r2, #0xff00\n\t"
 #endif
        "bne	5b\n\t"
-       "RETURN\n"
+       RETURN()
 
        /* src and dst do not have a common word-alignement.  Fall back to
 	  byte copying.  */
@@ -144,7 +144,7 @@ strcpy (char* dst, const char* src)
        "strb	r2, [ip], #1\n\t"
        "cmp	r2, #0\n\t"
        "bne	4b\n\t"
-       "RETURN"
+       RETURN()
 
 #elif !defined (__thumb__) || defined (__thumb2__)
        "mov	r3, r0\n\t"
@@ -153,7 +153,7 @@ strcpy (char* dst, const char* src)
        "strb	r2, [r3], #1\n\t"
        "cmp	r2, #0\n\t"
        "bne	1b\n\t"
-       "RETURN"
+       RETURN()
 #else
        "mov	r3, r0\n\t"
   "1:\n\t"
@@ -163,7 +163,7 @@ strcpy (char* dst, const char* src)
        "add	r3, r3, #1\n\t"
        "cmp	r2, #0\n\t"
        "bne	1b\n\t"
-       "RETURN"
+       RETURN()
 #endif
        );
 }

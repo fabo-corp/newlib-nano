@@ -78,6 +78,13 @@
 .endm
 
 #else
+
+#if defined (_ISA_ARM_4T) || defined (_ISA_THUMB_1)
+#define RETURN(cond)     "bx" #cond "	lr\n\t"
+#else
+#define RETURN(cond)     "mov" #cond "	pc, lr\n\t"
+#endif
+
 asm(".macro  RETURN	cond=\n\t"
 #if defined (_ISA_ARM_4T) || defined (_ISA_THUMB_1)
     "bx\\cond	lr\n\t"
@@ -86,6 +93,14 @@ asm(".macro  RETURN	cond=\n\t"
 #endif
     ".endm"
     );
+
+#if defined (_ISA_ARM_7)
+#define OPTPLD(base, offset)     "pld	[" #base ", " #offset "]\n\t"
+#define OPTPLD0(base)     "pld	[" #base ", #0]\n\t"
+#else
+#define OPTPLD(base, offset)
+#define OPTPLD0(base)
+#endif
 
 asm(".macro optpld	base, offset=#0\n\t"
 #if defined (_ISA_ARM_7)
