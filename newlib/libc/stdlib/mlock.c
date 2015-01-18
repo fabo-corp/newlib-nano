@@ -43,7 +43,7 @@ that it already holds.
 __LOCK_INIT_RECURSIVE(static, __malloc_lock_object);
 #endif
 
-void
+__attribute__((weak)) void
 __malloc_lock (ptr)
      struct _reent *ptr;
 {
@@ -52,7 +52,7 @@ __malloc_lock (ptr)
 #endif
 }
 
-void
+__attribute__((weak)) void
 __malloc_unlock (ptr)
      struct _reent *ptr;
 {
